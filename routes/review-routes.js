@@ -27,7 +27,6 @@ router.get('/', async (req, res) => {
 	}
 	const project = await getProject(review.projectName);
 	const components = getComponents(project.data.getProject.project_structure);
-	console.log(components);
 	res.render("review", {
 		review,
 		components
@@ -41,6 +40,7 @@ router.post('/', urlencodedParser, (req, res) => {
 	if (!req.body || !req.body.username || !req.body.project || !req.body.comment){
 		return res.send("Something went wrong");	//	If the review sent doesn't contain all the necessary data, users are directed away 
 	}
+	console.log(req.body);	
 	const newReview = {	//	Data from the front-end is formated
 		completion: Object.keys(req.body).length - 3,
 		username: req.body.username,

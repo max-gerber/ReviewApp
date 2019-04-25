@@ -3,51 +3,32 @@
 	</br>
 	<%= review.projectName %>
 </h1>
-<form method="POST" action="/review" onsubmit="fill()">
-	<h2>TASK 1</h2>
-	Sub Task 1<input type="checkbox" name="sub1" <%  if (review.completion >= 1){ %> checked <% } %>></br>
-	Sub Task 2<input type="checkbox" name="sub2" <%  if (review.completion >= 2){ %> checked <% } %>></br>
-	Sub Task 3<input type="checkbox" name="sub3" <%  if (review.completion >= 3){ %> checked <% } %>></br>
-	Sub Task 4<input type="checkbox" name="sub4" <%  if (review.completion >= 4){ %> checked <% } %>></br>
-	Sub Task 5<input type="checkbox" name="sub5" <%  if (review.completion >= 5){ %> checked <% } %>></br>
-	Sub Task 6<input type="checkbox" name="sub6" <%  if (review.completion >= 6){ %> checked <% } %>></br>
-	Sub Task 7<input type="checkbox" name="sub7" <%  if (review.completion >= 7){ %> checked <% } %>></br>
-	Sub Task 8<input type="checkbox" name="sub8" <%  if (review.completion >= 8){ %> checked <% } %>></br>
-	Sub Task 9<input type="checkbox" name="sub9" <%  if (review.completion >= 9){ %> checked <% } %>></br>
-	Sub Task 10<input type="checkbox" name="sub10" <%  if (review.completion >= 10){ %> checked <% } %>></br>
-	<h2>TASK 2</h2>
-	Sub Task 11<input type="checkbox" name="sub11" <%  if (review.completion >= 11){ %> checked <% } %>></br>
-	Sub Task 12<input type="checkbox" name="sub12" <%  if (review.completion >= 12){ %> checked <% } %>></br>
-	Sub Task 13<input type="checkbox" name="sub13" <%  if (review.completion >= 13){ %> checked <% } %>></br>
-	Sub Task 14<input type="checkbox" name="sub14" <%  if (review.completion >= 14){ %> checked <% } %>></br>
-	Sub Task 15<input type="checkbox" name="sub15" <%  if (review.completion >= 15){ %> checked <% } %>></br>
-	Sub Task 16<input type="checkbox" name="sub16" <%  if (review.completion >= 16){ %> checked <% } %>></br>
-	Sub Task 17<input type="checkbox" name="sub17" <%  if (review.completion >= 17){ %> checked <% } %>></br>
-	Sub Task 18<input type="checkbox" name="sub18" <%  if (review.completion >= 18){ %> checked <% } %>></br>
-	Sub Task 19<input type="checkbox" name="sub19" <%  if (review.completion >= 19){ %> checked <% } %>></br>
-	Sub Task 20<input type="checkbox" name="sub20" <%  if (review.completion >= 20){ %> checked <% } %>></br>
-	<h2>TASK 3</h2>
-	Sub Task 21<input type="checkbox" name="sub21" <%  if (review.completion >= 21){ %> checked <% } %>></br>
-	Sub Task 22<input type="checkbox" name="sub22" <%  if (review.completion >= 22){ %> checked <% } %>></br>
-	Sub Task 23<input type="checkbox" name="sub23" <%  if (review.completion >= 23){ %> checked <% } %>></br>
-	Sub Task 24<input type="checkbox" name="sub24" <%  if (review.completion >= 24){ %> checked <% } %>></br>
-	Sub Task 25<input type="checkbox" name="sub25" <%  if (review.completion >= 25){ %> checked <% } %>></br>
-	Sub Task 26<input type="checkbox" name="sub26" <%  if (review.completion >= 26){ %> checked <% } %>></br>
-	Sub Task 27<input type="checkbox" name="sub27" <%  if (review.completion >= 27){ %> checked <% } %>></br>
-	Sub Task 28<input type="checkbox" name="sub28" <%  if (review.completion >= 28){ %> checked <% } %>></br>
-	Sub Task 29<input type="checkbox" name="sub29" <%  if (review.completion >= 29){ %> checked <% } %>></br>
-	Sub Task 30<input type="checkbox" name="sub30" <%  if (review.completion >= 30){ %> checked <% } %>></br>
-	<h2>TASK 4</h2>
-	Sub Task 31<input type="checkbox" name="sub31" <%  if (review.completion >= 31){ %> checked <% } %>></br>
-	Sub Task 32<input type="checkbox" name="sub32" <%  if (review.completion >= 32){ %> checked <% } %>></br>
-	Sub Task 33<input type="checkbox" name="sub33" <%  if (review.completion >= 33){ %> checked <% } %>></br>
-	Sub Task 34<input type="checkbox" name="sub34" <%  if (review.completion >= 34){ %> checked <% } %>></br>
-	Sub Task 35<input type="checkbox" name="sub35" <%  if (review.completion >= 35){ %> checked <% } %>></br>
-	Sub Task 36<input type="checkbox" name="sub36" <%  if (review.completion >= 36){ %> checked <% } %>></br>
-	Sub Task 37<input type="checkbox" name="sub37" <%  if (review.completion >= 37){ %> checked <% } %>></br>
-	Sub Task 38<input type="checkbox" name="sub38" <%  if (review.completion >= 38){ %> checked <% } %>></br>
-	Sub Task 39<input type="checkbox" name="sub39" <%  if (review.completion >= 39){ %> checked <% } %>></br>
-	Sub Task 40<input type="checkbox" name="sub40" <%  if (review.completion >= 40){ %> checked <% } %>></br>
+<form method="POST" action="/review" onsubmit="fill()" id="form">
+	<script>
+		'<% let taskNumber = 0 %>';
+		'<% for (let i = 0; i < components.length; i++){ %>'
+			var node = document.createElement('H2');
+			var textnode = document.createTextNode('<%= components[i].component %>');
+			node.appendChild(textnode);
+			document.getElementById("form").appendChild(node);
+			'<% for (let j = 0; j < components[i].tasks.length; j++){ %>'
+				var node2 = document.createElement('null');
+				var textnode2 = document.createTextNode('<%= components[i].tasks[j] %>');
+				node2.appendChild(textnode2);
+				document.getElementById("form").appendChild(node2);
+				var node3 = document.createElement('INPUT');
+				'<% if(review.completion > taskNumber){ %>'
+					node3.type = 'hidden';
+				'<% } else { %>'
+					node3.type = 'checkbox';
+				'<% } %>'
+				node3.name = `task${'<%= taskNumber++ %>'}`;
+				document.getElementById("form").appendChild(node3);
+				document.getElementById("form").appendChild(document.createElement('BR'));
+			'<% } %>'
+		'<% } %>'
+		document.getElementById("form").appendChild(document.createElement('BR'));
+	</script>
 	Comment</br>
 	<input type="text" name="comment" required></br>
 	<input type="hidden" id="usr" name="username">
