@@ -3,43 +3,60 @@
 	</br>
 	<%= review.projectName %>
 </h1>
+<dom id='dom'>
+</dom>
 <form method="POST" action="/review" onsubmit="fill()" id="form">
-	<script>
-		'<% let taskNumber = 0 %>';
-		'<% for (let i = 0; i < components.length; i++){ %>'
-			var node = document.createElement('H2');
-			var textnode = document.createTextNode('<%= components[i].component %>');
-			node.appendChild(textnode);
-			document.getElementById("form").appendChild(node);
-			'<% for (let j = 0; j < components[i].tasks.length; j++){ %>'
-				var node2 = document.createElement('null');
-				var textnode2 = document.createTextNode('<%= components[i].tasks[j] %>');
-				node2.appendChild(textnode2);
-				document.getElementById("form").appendChild(node2);
-				var node3 = document.createElement('INPUT');
-				'<% if(review.completion > taskNumber){ %>'
-					node3.type = 'hidden';
-				'<% } else { %>'
-					node3.type = 'checkbox';
-				'<% } %>'
-				node3.name = `task${'<%= taskNumber++ %>'}`;
-				document.getElementById("form").appendChild(node3);
-				document.getElementById("form").appendChild(document.createElement('BR'));
-			'<% } %>'
-		'<% } %>'
-		document.getElementById("form").appendChild(document.createElement('BR'));
-	</script>
 	Comment</br>
 	<input type="text" name="comment" required></br>
 	<input type="hidden" id="usr" name="username">
 	<input type="hidden" id="prj" name="project">
+	<input type="hidden" id="cmp" name="completion">
 	<input type="submit" value="submit">
 </form>
 <script>
+	let currentTask = '<%= review.completion %>';
+	'<% let taskNumber = 0 %>';
+
+	'<% for (let i = 0; i < components.length; i++){ %>'
+		var component = document.createElement('H2');
+
+		component.innerHTML = '<%= components[i].component %>';
+		document.getElementById("dom").appendChild(component);
+		'<% for (let j = 0; j < components[i].tasks.length; j++){ %>'
+			var task = document.createElement('null');
+			var check = document.createElement('INPUT');
+
+			task.innerHTML = '<%= components[i].tasks[j] %>';
+			document.getElementById("dom").appendChild(task);
+			check.id = `task${'<%= taskNumber %>'}`;
+			check.name = `task${'<%= taskNumber %>'}`;
+			check.type = 'checkbox';
+			check.disabled = true;
+			'<% if(review.completion > taskNumber){ %>'
+				check.checked = true;
+			'<% } else  if (review.completion == taskNumber){ %>'
+				check.disabled = false;
+				check.addEventListener("click", nextTask);
+			'<% } %>'
+			'<% taskNumber++ %>'
+			document.getElementById("dom").appendChild(check);
+			document.getElementById("dom").appendChild(document.createElement('BR'));
+		'<% } %>'
+	'<% } %>'
+	document.getElementById("dom").appendChild(document.createElement('BR'));
+	
 	function fill(){
 		const username = '<%= review.username %>';
 		const project = '<%= review.projectName %>';
+		const completion = currentTask;
 			document.getElementById("usr").value = username;
 			document.getElementById("prj").value = project;
+			document.getElementById("cmp").value = completion;
 	};
+
+	function nextTask(){
+		document.getElementById('task'+ currentTask++).disabled = true;
+		document.getElementById('task'+currentTask).disabled = false;
+		document.getElementById('task'+currentTask).addEventListener("click", nextTask);
+	}
 </script>

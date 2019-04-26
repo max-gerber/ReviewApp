@@ -39,16 +39,16 @@ router.post('/', urlencodedParser, (req, res) => {
 	}
 	if (!req.body || !req.body.username || !req.body.project || !req.body.comment){
 		return res.send("Something went wrong");	//	If the review sent doesn't contain all the necessary data, users are directed away 
-	}
-	console.log(req.body);	
+	}	
 	const newReview = {	//	Data from the front-end is formated
-		completion: Object.keys(req.body).length - 3,
+		completion: parseInt(req.body.completion),
 		username: req.body.username,
 		assessor: req.user,
 		projectName: req.body.project,
-		comment: req.body.comment,
+		comment: req.body.comment.replace("\"", "'").replace('\\', ''),
 		date: Date.now().toString(10)
-	};	
+	};
+	console.log(newReview)
 	sendReview(newReview);	//	Review data is sent to the API and added to the database
 	return res.send("Review proccessed");
 });
