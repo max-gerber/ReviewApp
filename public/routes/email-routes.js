@@ -1,5 +1,5 @@
 const router = require('express').Router();
-const keys = require('../config/keys');
+const keys = require('../../config/keys');
 const postmark = require('postmark');
 const bodyParser = require('body-parser');
 const { getAllReviews } = require('../functions/getAllReviews');

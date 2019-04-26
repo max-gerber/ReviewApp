@@ -2,9 +2,9 @@ const express = require('express');
 const keys = require('./config/keys');
 const cookieSession = require('cookie-session');
 const passport = require('passport');
-const authRoutes = require('./routes/auth-routes');
-const reviewRoutes = require('./routes/review-routes');
-const emailRoutes = require('./routes/email-routes');
+const authRoutes = require('./public/routes/auth-routes');
+const reviewRoutes = require('./public/routes/review-routes');
+const emailRoutes = require('./public/routes/email-routes');
 const postmark = require('postmark');
 require('isomorphic-fetch');
 require('./config/passport-setup');
@@ -12,6 +12,8 @@ require('./config/passport-setup');
 const app = express();
 
 app.set('view engine', 'ejs');
+
+app.use(express.static(__dirname + '/public'));
 
 app.use(cookieSession({
 	maxAge: 24 * 60 * 60 * 1000,	//	Cookies last for one day
