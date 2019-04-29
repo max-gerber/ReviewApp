@@ -1,42 +1,34 @@
 const router = require('express').Router();
-const keys = require('../../config/keys');
-const postmark = require('postmark');
 const bodyParser = require('body-parser');
-const { getAllReviews } = require('../functions/getAllReviews');
-const { checkCompletion } = require('../functions/checkCompletion');
-
-const client = new postmark.Client(keys.postmark.token);
+const { getAllMentors } = require('../functions/getAllMentors');
+const { getAllTeams} = require('../functions/getAllTeams');
+const { sendMentorEmail } = require('../functions/sendMentorEmail');
+const { sendLeaderEmail } = require('../functions/sendLeaderEmail');
 
 const urlencodedParser = bodyParser.urlencoded({
 	extended: false
 });
 
-router.get('/', (req, res) => {
-    res.render('email');
+router.get('/mentor', async (req, res) => {
+    let mentors = await getAllMentors();
+    mentors = mentors.data.getAllMentors;
+
+    for (let i = 0; i < mentors.length; i++){
+        sendMentorEmail(mentors[i].username);
+    }
+    return res.send('Emails have been sent');
 });
 
-router.post('/', urlencodedParser, async (req, res) => {
-    if (!req.body || !req.body.reviewer || !req.body.username || !req.body.projectName){
-        return res.send('Something went wrong');
-    };
-    const reviewer = req.body.reviewer;
-    const username = req.body.username;
-    const projectName = req.body.projectName;
-	const reviews = await getAllReviews(username, projectName);
-    if (!reviews.data.getAllReviews[0]){
-        return res.send('It seemes you have entered incorrect information');
-    };
-    const review = reviews.data.getAllReviews[0];
-    if (await checkCompletion(review)){
-        return res.send('This user has finished this project');
-    };
-    client.sendEmail({
-        "From": "no-reply@wethinkcode.co.za",
-        "To": `${reviewer}@student.wethinkcode.co.za`,
-        "Subject": "Review Time",
-        "TextBody": `Hello ${req.body.rev}, it's time for you to review ${username}'s ${projectName}.\nFollow this link to begin the review: http://localhost:4000/review?id=${review.id}`
-    });
-    return res.send('Email has been sent');
+router.get('/leader', async (req, res) => {
+    let teams = await getAllTeams();
+    teams = teams.data.getAllTeams;
+    console.log(teams);
+    
+
+    for (let i = 0; i < teams.length; i++){
+        sendLeaderEmail(teams[i]);
+    }
+    return res.send('Emails have been sent');
 });
 
 module.exports = router;

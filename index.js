@@ -5,7 +5,6 @@ const passport = require('passport');
 const authRoutes = require('./public/routes/auth-routes');
 const reviewRoutes = require('./public/routes/review-routes');
 const emailRoutes = require('./public/routes/email-routes');
-const postmark = require('postmark');
 require('isomorphic-fetch');
 require('./config/passport-setup');
 
